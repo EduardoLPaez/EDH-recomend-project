@@ -1,9 +1,7 @@
 import pandas as pd
-import numpy as np
 import sqlite3
-
 # connection: 
-connect = sqlite3.connect('../AllPrintings_true.sqlite')
+connect = sqlite3.connect('AllPrintings.sqlite')
 
 # total of 50412 cards in the db,]
 # about 18,006 are black border as of guilds of ravnica NEED TO ACCOUNT FOR. ie normally playable
@@ -14,12 +12,11 @@ connect = sqlite3.connect('../AllPrintings_true.sqlite')
 
 mtg_data = pd.read_sql_query( 
     # will ned to pull name, rules text, cost, colosr, converted cost, type, types, 
-    """SELECT name  
-    FROM Cards
+    """SELECT * 
+    FROM cards
     WHERE borderColor IS 'black' 
     """
     ,
     connect
 )
-
-print(mtg_data['name'].value_counts().shape)
+mtg_data.to_csv("mtg_modern_whole.csv")
