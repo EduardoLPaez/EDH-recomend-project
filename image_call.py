@@ -49,6 +49,6 @@ return_ = [f'{scryfall_end}/cards/{i}' for i in df]
 
 # calls all of them, and returns the uri for all images.   
 list_ = [get_img(el,i) for i,el in enumerate(return_)]
-img_uri = pd.DataFrame(data = list_, columns = 'img_uris')
+img_uri = pd.DataFrame(data = list_)
 
-img_uri.to_csv('Images/img_uri.csv', index = False)
+img_uri.to_csv('Images/img_uri.csv')

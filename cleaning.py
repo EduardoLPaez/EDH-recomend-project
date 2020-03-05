@@ -31,6 +31,9 @@ def set_dtypes(data):
     data[['name', 'text', 'types','subtypes','rarity','scryfallId']].astype(str)
     return data
 
+def image_uri():
+    return pd.read_csv('Images/img_uri.csv')
+
 def deep_clean(data):
     data2 = data[['name', 'power', 'toughness', 'text',
      'types', 'subtypes', 'rarity', 'colorIdentity', 'colors',
@@ -40,6 +43,14 @@ def deep_clean(data):
 
     data3 = color_split(data2)
     data3 = set_dtypes(data3)
+    is_commander = []
+    for i in data3['type']:
+        if i.startswith('Legendary Creature'):
+            is_commander.append(1)
+        else: 
+            is_commander.append(0)
+    data3['is_commander'] = is_commander
+    data3['uri'] = image_uri()
     return data3
 
 def color_split(data): # creates a get dummies for color cost and color identity, also drops new useless columns.
@@ -67,8 +78,8 @@ def color_split(data): # creates a get dummies for color cost and color identity
     data.drop(columns = ['manaCost','colors','colorIdentity'], inplace = True)
     return data
 
-try:
-    data = pd.read_csv('mtg_modern_clean.csv')
-except:
-    data = clean()
-    data.to_csv('mtg_modern_clean.csv')
+# try:
+#     data = pd.read_csv('mtg_modern_clean.csv')
+# except:
+data = clean()
+data.to_csv('mtg_modern_clean.csv')
