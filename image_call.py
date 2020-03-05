@@ -39,7 +39,7 @@ def get_img(url, iter):
     try:
         return json_['image_uris']['normal'] 
     except:
-        return None
+        return '0'
 
 
 
