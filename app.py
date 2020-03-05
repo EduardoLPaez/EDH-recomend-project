@@ -4,7 +4,7 @@ import numpy as np
 
 st.title("EDH recommender")
 data = pd.read_csv("mtg_modern_clean.csv")
-#pd.read_csv('images/img_clean.csv')
+# pd.read_csv('images/img_clean.csv') # issues gennerating csv, apparently some memory issue started when loading mtg_whol_clean.csv
 
 # @st.cache
 # def load_data(nrows):

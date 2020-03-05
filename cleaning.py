@@ -27,15 +27,19 @@ def remove_redundant(data):
             id_.append(data['id'][i])
     return data.query(f"id == {id_}")
 
+def set_dtypes(data):
+    data[['name', 'text', 'types','subtypes','rarity','scryfallId']].astype(str)
+    return data
+
 def deep_clean(data):
-    data2 = data[['name', 'names', 'power', 'toughness', 'text',
+    data2 = data[['name', 'power', 'toughness', 'text',
      'types', 'subtypes', 'rarity', 'colorIdentity', 'colors',
       'convertedManaCost', 'manaCost', 'faceConvertedManaCost',  'side', 'scryfallId' ]]
 
     data2 = remove_redundant(data)
 
     data3 = color_split(data2)
-
+    data3 = set_dtypes(data3)
     return data3
 
 def color_split(data): # creates a get dummies for color cost and color identity, also drops new useless columns.
