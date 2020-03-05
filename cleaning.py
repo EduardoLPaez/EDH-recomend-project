@@ -19,14 +19,24 @@ def clean():
     data = deep_clean(data)
     return data
 
+def remove_redundant(data):
+    name_, id_= [],[] # this code pulls unique names and id's of cards for removing reprints.
+    for i,el in enumerate(data['name']):
+        if el not in name_:
+            name_.append(el)
+            id_.append(data['id'][i])
+    return data.query(f"id == {id_}")
+
 def deep_clean(data):
     data2 = data[['name', 'names', 'power', 'toughness', 'text',
-     'type', 'types', 'subtypes', 'supertypes', 'rarity', 'colorIdentity', 'colors',
-      'convertedManaCost', 'manaCost', 'faceConvertedManaCost',  'side', ]]
-    data2 = color_split(data2)
+     'types', 'subtypes', 'rarity', 'colorIdentity', 'colors',
+      'convertedManaCost', 'manaCost', 'faceConvertedManaCost',  'side', 'scryfallId' ]]
 
+    data2 = remove_redundant(data)
 
-    return data2
+    data3 = color_split(data2)
+
+    return data3
 
 def color_split(data): # creates a get dummies for color cost and color identity, also drops new useless columns.
     names = ['Green','Blue','Black','Red','White']
@@ -57,3 +67,4 @@ try:
     data = pd.read_csv('mtg_modern_clean.csv')
 except:
     data = clean()
+    data.to_csv('mtg_modern_clean.csv')

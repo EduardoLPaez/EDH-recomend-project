@@ -7,15 +7,40 @@ from time import sleep
 import json
 
 scryfall_end = 'https://api.scryfall.com'
-
 frame = pd.read_csv('mtg_modern_clean.csv')
 df = frame['scryfallId'] #.astype('list')
 
-def get_img(url):
-    sleep(.01)
+def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
+    """
+    Call in a loop to create terminal progress bar
+    @params:
+        iteration   - Required  : current iteration (Int)
+        total       - Required  : total iterations (Int)
+        prefix      - Optional  : prefix string (Str)
+        suffix      - Optional  : suffix string (Str)
+        decimals    - Optional  : positive number of decimals in percent complete (Int)
+        length      - Optional  : character length of bar (Int)
+        fill        - Optional  : bar fill character (Str)
+        printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
+    """
+    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+    filledLength = int(length * iteration // total)
+    bar = fill * filledLength + '-' * (length - filledLength)
+    print('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix), end = printEnd)
+    # Print New Line on Complete
+    if iteration == total: 
+        print()
+
+def get_img(url, iter):
+    sleep(.0050)
     get_ = requests.get(url)
     json_ = json.loads(get_.text)
-    return json_['image_uris']['normal']
+    printProgressBar(iter, len(return_))
+    try:
+        return json_['image_uris']['normal'] 
+    except:
+        return None
+
 
 
 
@@ -23,6 +48,6 @@ def get_img(url):
 return_ = [f'{scryfall_end}/cards/{i}' for i in df]
 
 # calls all of them, and returns the uri for all images.   
-img_uri = pd.DataFrame(data = [get_img(i) for i in return_], columns = 'img_uris')
+img_uri = pd.DataFrame(data = [get_img(el,i) for i,el in enumerate(return_)], columns = 'img_uris')
 
 img_uri.to_csv('Images/img_uri.csv', index = False)
