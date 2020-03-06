@@ -30,6 +30,7 @@ def remove_redundant(redundant):
 def image_uri():
     temp = pd.read_csv('Images/img_uri.csv')
     temp.columns = ['index', 'uri']
+    temp.set_index('index', inplace =True)
     return temp['uri']
 
 def deep_clean(frame_):
@@ -68,9 +69,10 @@ def color_split(color): # creates a get dummies for color cost and color identit
     # color identity VV
     for i,el in enumerate(names):
         color[f'colorIdentity_{el}'] = color['colorIdentity'].apply(lambda x: str(x).count(f'{start_[i]}'))
-    # bellow generates column for colorless identity
     color['colorIdentity_colorless'] = [1 if x == True else 0 for x in color['colorIdentity'].isna()]
-
+    # simplified for esier indexing.
+    # temp = color[['colorIdentity_Black','colorIdentity_White','colorIdentity_Red','colorIdentity_Blue','colorIdentity_Green']]
+    # color['color_identity'] = [temp.iloc[element].values.astype(int) for element in range(temp.shape[0])]
     color.drop(columns = ['manaCost','colors','colorIdentity'], inplace = True)
     return color
 
