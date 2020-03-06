@@ -8,7 +8,7 @@ connect = sqlite3.connect('AllPrintings.sqlite')
 
 # pipeline for optiyzation, 
 def clean():
-    data = pd.read_sql_query( 
+    df = pd.read_sql_query( 
     # will ned to pull name, rules text, cost, colosr, converted cost, type, types, 
     """SELECT * 
     FROM cards
@@ -16,70 +16,66 @@ def clean():
     """
     , connect)
     # make cleaning 
-    data = deep_clean(data)
-    return data
+    df1 = deep_clean(df)
+    return df1
 
-def remove_redundant(data):
+def remove_redundant(redundant):
     name_, id_= [],[] # this code pulls unique names and id's of cards for removing reprints.
-    for i,el in enumerate(data['name']):
+    for i,el in enumerate(redundant['name']):
         if el not in name_:
             name_.append(el)
-            id_.append(data['id'][i])
-    return data.query(f"id == {id_}")
-
-def set_dtypes(data):
-    data[['name', 'text', 'types','subtypes','rarity','scryfallId']].astype(str)
-    return data
+            id_.append(redundant['scryfallId'][i])
+    return redundant.query(f"scryfallId == {id_}")
 
 def image_uri():
-    return pd.read_csv('Images/img_uri.csv')
+    temp = pd.read_csv('Images/img_uri.csv')
+    temp.columns = ['index', 'uri']
+    return temp['uri']
 
-def deep_clean(data):
-    data2 = data[['name', 'power', 'toughness', 'text',
-     'types', 'subtypes', 'rarity', 'colorIdentity', 'colors',
+def deep_clean(frame_):
+    frame_2 = frame_[['name', 'power', 'toughness', 'text',
+     'types', 'type', 'subtypes', 'rarity', 'colorIdentity', 'colors',
       'convertedManaCost', 'manaCost', 'faceConvertedManaCost',  'side', 'scryfallId' ]]
 
-    data2 = remove_redundant(data)
-
-    data3 = color_split(data2)
-    data3 = set_dtypes(data3)
+    frame_3 = remove_redundant(frame_2)
+    frame_4 = color_split(frame_3)
     is_commander = []
-    for i in data3['type']:
+    for i in frame_4['type']:
         if i.startswith('Legendary Creature'):
             is_commander.append(1)
         else: 
             is_commander.append(0)
-    data3['is_commander'] = is_commander
-    data3['uri'] = image_uri()
-    return data3
+    frame_4['is_commander'] = is_commander
+    frame_4['uri'] = image_uri()
+    return frame_4
 
-def color_split(data): # creates a get dummies for color cost and color identity, also drops new useless columns.
+def color_split(color): # creates a get dummies for color cost and color identity, also drops new useless columns.
     names = ['Green','Blue','Black','Red','White']
     start_ = ['G','U','B','R','W']
 
     for i,el in enumerate(names): # creates columns with cost of colors and color identity
         # color cost VV
-        data[f'manaCost_{el}'] = data['manaCost'].apply(lambda x: str(x).count(f'{start_[i]}'))
+        color[f'manaCost_{el}'] = color['manaCost'].apply(lambda x: str(x).count(f'{start_[i]}'))
     # bellow gennerates cost of colorless. 
-    data['manaCost_colorless'] = data['convertedManaCost'].astype('int') - sum(
-        [data['manaCost_Green'],
-        data['manaCost_Red'],
-        data['manaCost_Black'],
-        data['manaCost_Blue'], 
-        data['manaCost_White']
+    color['manaCost_colorless'] = color['convertedManaCost'].astype('int') - sum(
+        [color['manaCost_Green'],
+        color['manaCost_Red'],
+        color['manaCost_Black'],
+        color['manaCost_Blue'], 
+        color['manaCost_White']
         ])
 
     # color identity VV
     for i,el in enumerate(names):
-        data[f'colorIdentity_{el}'] = data['colorIdentity'].apply(lambda x: str(x).count(f'{start_[i]}'))
+        color[f'colorIdentity_{el}'] = color['colorIdentity'].apply(lambda x: str(x).count(f'{start_[i]}'))
     # bellow generates column for colorless identity
-    data['colorIdentity_colorless'] = [1 if x == True else 0 for x in data['colorIdentity'].isna()]
+    color['colorIdentity_colorless'] = [1 if x == True else 0 for x in color['colorIdentity'].isna()]
 
-    data.drop(columns = ['manaCost','colors','colorIdentity'], inplace = True)
-    return data
+    color.drop(columns = ['manaCost','colors','colorIdentity'], inplace = True)
+    return color
 
 # try:
-#     data = pd.read_csv('mtg_modern_clean.csv')
+#     color = pd.read_csv('mtg_modern_clean.csv')
 # except:
-data = clean()
-data.to_csv('mtg_modern_clean.csv')
+mtg_frame = clean()
+mtg_frame.to_csv('mtg_modern_clean.csv')

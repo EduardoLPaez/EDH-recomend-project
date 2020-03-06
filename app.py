@@ -15,20 +15,49 @@ def roll_ ():
 
 def select(choise):
     st.title(f'{choise}')
-    if choise == 'Blackck':
+    if choise == 'Black':
         st.text('''
-        Here is a short description of the functions of Blackck. for now its mostly
-        just loremipsum type stuff.
+        Black is the color of power, death, and ambition. It uses any and all posible resources to gain the upperhand in a game.
+        most cards in the color use the life total, hand, deck, or even other creatures on the field or off it as a resource to be
+        expended for further advantage. when mixed with other colors, the result tends to be more specialized on using
+        one resourece, genneraly black white focuses on using lifetotal, black blue abuses the hand and deck, black red focuses on creatures 
+        and sacrefice, and black green focuses on recurring the graveyard at nauseum. 
+        black's weackness lies in its inability to deal with non creature permanents such as artifacts and enchanments. its goal tends to be to
+        out value its opponents before the nonliving parts of the decks overwelm it.
         ''')
+    elif choise == 'white':
+        st.text('''
+        White is the color of healing, enchanment, and token armies. It specialises on fielding large numbers of smaller creatures and altering the rules of 
+        engament to benefit them. It is filled with cards that heal the player, and keep creatires alive against all ods, or earradicate everithing for aclean 
+        slate. when mixed into other colors white genneraly bolster some aspect of the color. white black focuses on modifiying the life total to your advantage,
+        white blue has some of the strongest and most encompasing enchanments, white green can field massive armies of tokens, and white red
+        is ussually associated with equipment artifacts. 
+        white's weackness lies in its speed. Its deffencive nature has a tendency to slow it down though its versatily and ability to whipe the board clean
+        if nessesary compensate for it. 
+        ''')
+    elif choise == 'Red':
+        st.text("""
+        Red is the color of emotion, destruction, and freedom. it hits the board fast, and its enemies faster. as a color it has the largest asortment of
+        damaging options of any color, rainging from creatures to fire and lightning spelles, to creature effects, and a pile of artifacts and artifact supporrt
+        for good measure. when mixed with other colors it tends to add a good degree of speed without messing with the other color most the time. 
+        black red focus on sacrefising smaller creatures to burn away ate the enemy, white red on building armies and equiping them with artifacts to burn away at their enemies,
+        red green on rushing green's ussual colosi to board even earlier to burn away their enemies, and red blue on the largest most conveluded conflagration imaginable.
+        to burn away their enemies....
+        over all red is weack to its own speed. if an enemy is not dead when red runs out of steam, then theere is little red can do.
+        """)
+
 def top_commanders(in_): # filters commander collor identities
     data = data.query(f'is_commander == 1')
     uri = []
     if in_ == None: # filters colorless
         dta1 = data.query('colorIdentity_colorless == 1')
         uri = list(data[uri])
-    else:# all others
+    else: # all others
         for i in in_:
-            uri.append
+            temp = data[f'colorIdentity_{in_}','name','uri','use']
+            uri.append((temp['uri'], temp['use']))# need to set a condicional for this. somehow..
+        uri_df = pd.DataFrame(data = uri, columns = ['uri', 'use'])
+    return uri.uniques.sortvalues(by =['use'], ascending = False)
 
 
 def main(color_list = None, commander = None):
