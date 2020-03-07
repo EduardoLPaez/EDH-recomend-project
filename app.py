@@ -24,13 +24,14 @@ def cards(command, model = card_model1, df = data):
     cluster = model.predict([df.query(f'name == {command}')['text']])
     return data.query(f'clusters == {cluster}')
 
-def print_card(card):
-    st.subheader(card['name'])
-    st.markdown(card['text']) # consider adding color identity in a redable format.
+def print_card(comm, card = data ):
+    st.subheader(card.query(f'name == {comm}')['name'])
+    st.markdown(card.query(f'name == {comm}')['text']) # consider adding color identity in a redable format.
     
 
 def color_correct(card_frame, comm, cframe = data):
-    comm = cframe.query(f'name == {comm}')['']
+    comm = cframe.query(f'name == {comm}')
+
 
     # frak.. 
 
@@ -133,11 +134,10 @@ def main():
     if commander != 'chose':
         st.title(f'{commander}')
         cards = cards(commander)
-        cards = color_correct(cards, commander).reset_index()
+        # cards = color_correct(cards, commander).reset_index()
 
-
-        for i in range(30):
-            print_cards(cards.loc[i])
+        # for i in range(30):
+        #     print_cards(cards.loc[i])
         
 
 if __name__ == '__main__':
