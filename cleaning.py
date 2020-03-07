@@ -28,10 +28,13 @@ def remove_redundant(redundant):
     return redundant.query(f"scryfallId == {id_}")
 
 def image_uri():
-    temp = pd.read_csv('Images/img_uri.csv')
-    temp.columns = ['index', 'uri']
-    temp.set_index('index', inplace =True)
-    return temp['uri']
+    try:
+        temp = pd.read_csv('Images/img_uri.csv')
+        temp.columns = ['index', 'uri']
+        temp.set_index('index', inplace =True)
+        return temp['uri']
+    except:
+        return
 
 def deep_clean(frame_):
     frame_2 = frame_[['name', 'power', 'toughness', 'text',
