@@ -2,9 +2,15 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from random import choice
+from textblob import TextBlob
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.cluster import KMeans
+from sklearn.metrics import adjusted_rand_score
+import joblib
 
 
 data = pd.read_csv("mtg_modern_clean.csv")
+card_model1 = joblib.load('models/language_kmeans.sav')
 
 # pd.set_option('display.colwidth' , 500 )
 # test_img = 'https://img.scryfall.com/cards/normal/front/0/3/03f4341c-088b-4f35-b82b-3d98d8a93de4.jpg?1576382166'
@@ -14,6 +20,21 @@ data = pd.read_csv("mtg_modern_clean.csv")
 # def roll_(to ):
 #     result = randint(2, 5)
 #     return result
+def cards(command, model = card_model1, df = data):
+    cluster = model.predict([df.query(f'name == {command}')['text']])
+    return data.query(f'clusters == {cluster}')
+
+def print_card(card):
+    st.subheader(card['name'])
+    st.markdown(card['text']) # consider adding color identity in a redable format.
+    
+
+def color_correct(card_frame, comm, cframe = data):
+    comm = cframe.query(f'name == {comm}')['']
+
+    # frak.. 
+
+
 
 def top_commanders(in_, frame = data): # filters commander collor identities
     colors =  ['Black','White','Red','Blue','Green']
@@ -111,7 +132,13 @@ def main():
 
     if commander != 'chose':
         st.title(f'{commander}')
-        st.markdown('''insert clustering model results here!!!!!!''')
+        cards = cards(commander)
+        cards = color_correct(cards, commander).reset_index()
+
+
+        for i in range(30):
+            print_cards(cards.loc[i])
+        
 
 if __name__ == '__main__':
     main()
