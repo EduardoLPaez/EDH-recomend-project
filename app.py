@@ -25,12 +25,12 @@ def cards(command, model = card_model1, df = data):
     return data.query(f'clusters == {cluster}')
 
 def print_card(comm, card = data ):
-    st.subheader(card.query(f'name == {comm}')['name'])
-    st.markdown(card.query(f'name == {comm}')['text']) # consider adding color identity in a redable format.
+    st.subheader(card.query(f'name == "{comm}"')['name'])
+    st.markdown(card.query(f'name == "{comm}"')['text']) # consider adding color identity in a redable format.
     
 
 def color_correct(card_frame, comm, cframe = data):
-    comm = cframe.query(f'name == {comm}')
+    comm = cframe.query(f'name == "{comm}"')
 
 
     # frak.. 
@@ -55,7 +55,7 @@ def top_commanders(in_, frame = data): # filters commander collor identities
 
 
 def main():
-    menu = ['start','color explination','color selection']
+    menu = ['start','color explination','EDH','color selection']
     commanders = list(np.append(np.array(['chose']), data.query('is_commander == 1')['name'].sort_values()))
 
     choises = st.sidebar.selectbox('page', menu)
@@ -65,16 +65,18 @@ def main():
         st.title("EDH recommender")
         st.markdown('''
             - hello, this aplication will require you to select the colors of the comander you are interested in.
-            - use the dropdown bar to the left to select weather you would like to look at mono, dual,
-            tri, quad, chomatic, or colorless comanders. 
-            - from there select a comander name and you will get card recomendations for it.
-            - there is also a section for explaning the colors and basic rules of commander also known as EDH(elder dragon hilander)
+            - use the dropdown bar to the left to go to 'color select' to see commanders for certain color combinations. 
+            - from there pick a commander name from the bar bellow that. and you will be recomended cards for it.
+            - there is also a section for explanions on the colors and basic rules of commander also known as EDH(elder dragon hilander)
             as a format
-            - or you could just look for a random commander by cliking bellow.
         ''')
         #if st.button('Random'):
-                    
-    if choises == 'color selection':
+    if choises == 'EDH':# missing edh explination
+        st.title('EDH as a format')
+        st.markdown('''
+        
+        ''')                   
+    if choises == 'color selection':# need to add check for vaiable plainwalker commanders
         st.title('Commander colors')
         st.markdown('''- all decks in the EDH format have a comander. the commanders color \nidentity determines what cardscan be added to it
                     - an exploration of which is in the color explination section.
@@ -133,7 +135,7 @@ def main():
 
     if commander != 'chose':
         st.title(f'{commander}')
-        cards = cards(commander)
+        cards(commander)
         # cards = color_correct(cards, commander).reset_index()
 
         # for i in range(30):
