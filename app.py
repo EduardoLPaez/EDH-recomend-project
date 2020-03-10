@@ -55,10 +55,11 @@ def top_commanders(in_, frame = data): # filters commander collor identities
 
 
 def main():
-    menu = ['start','color explination','EDH','color selection']
+    menu = ['start','color explination','EDH','color selection', 'card analysis']
+    submenu = ['color split', '']
     commanders = list(np.append(np.array(['chose']), data.query('is_commander == 1')['name'].sort_values()))
 
-    choises = st.sidebar.selectbox('page', menu)
+    choises = st.sidebar.selectbox('page', menu) # mor things to add
     commander = st.sidebar.selectbox('commanders', commanders)
 
     if choises == 'start':
@@ -132,7 +133,8 @@ def main():
         st.subheader('Green')
         st.markdown(''' 
         ''')
-
+    if choises == 'card analysis': # see if we can predict cmc....
+        st.title('tobe made')
     if commander != 'chose':
         st.title(f'{commander}')
         cards(commander)
