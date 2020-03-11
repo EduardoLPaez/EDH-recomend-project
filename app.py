@@ -55,13 +55,14 @@ def top_commanders(in_, frame = data): # filters commander collor identities
 
 
 def main():
+    # lists used by select boxes in app.
     menu = ['start','explinations','color selection', 'card analysis']
     analisys_menu = ['start', 'types distribution']
     commanders = list(np.append(np.array(['chose']), data.query('is_commander == 1')['name'].sort_values()))
 
+    # sidebar. need to learn how to make sidebar NOT a select box...
     choises = st.sidebar.selectbox('page', menu) # mor things to add
-    commander = st.sidebar.selectbox('commanders', commanders)
-
+    
     if choises == 'start':
         st.title("EDH recommender")
         st.markdown('''
@@ -138,23 +139,32 @@ def main():
             st.markdown(''' 
             ''')                
     if choises == 'color selection':# need to add check for vaiable plainwalker commanders
-        st.title('Commander colors')
-        st.markdown('''- all decks in the EDH format have a comander. the commanders color \nidentity determines what cardscan be added to it
-                    - an exploration of which is in the color explination section.
-                    - please select a color from the check list bellow.
-                    - you can then find the information on the comander in the scroll down to the left 
+        commander = st.selectbox('commanders', commanders)
+        if commander == 'chose':
+            st.title('Commander colors')
+            st.markdown('''- all decks in the EDH format have a comander. the commanders color \nidentity determines what cardscan be added to it
+                        - an exploration of which is in the color explination section.
+                        - please select a color from the check list bellow.
+                        - you can then find the information on the comander in the scroll down to the left 
+                    ''')
+            cb1 = st.checkbox('Black',)
+            cb2 = st.checkbox('White')
+            cb3 = st.checkbox('Red')
+            cb4 = st.checkbox('Blue')
+            cb5 = st.checkbox('Green')
+            uri_return = top_commanders([cb1,cb2,cb3,cb4,cb5])
+            for i,el in enumerate(uri_return[0]):
+                st.markdown(f'''
+                - {el}:  
+                - {uri_return[1][i]}
                 ''')
-        cb1 = st.checkbox('Black',)
-        cb2 = st.checkbox('White')
-        cb3 = st.checkbox('Red')
-        cb4 = st.checkbox('Blue')
-        cb5 = st.checkbox('Green')
-        uri_return = top_commanders([cb1,cb2,cb3,cb4,cb5])
-        for i,el in enumerate(uri_return[0]):
-            st.markdown(f'''
-            - {el}:  
-            - {uri_return[1][i]}
-            ''')
+        if commander != 'chose':
+            st.title(f'{commander}')
+            cards(commander)
+            # cards = color_correct(cards, commander).reset_index()
+
+            # for i in range(30):
+            #     print_cards(cards.loc[i])
     if choises == 'card analysis': # see if we can predict cmc....
         st.title('Genral analysis')
         analysis_choice = st.selectbox('section', analisys_menu)
@@ -163,13 +173,7 @@ def main():
             st.markdown('this section is for the analisys\n and exploration of the mtg data\n select a section from the bar above.\n and have fun. :D\n')
         if analysis_choice == 'types distribution':
             st.subheader('working on it')
-    if commander != 'chose':
-        st.title(f'{commander}')
-        cards(commander)
-        # cards = color_correct(cards, commander).reset_index()
-
-        # for i in range(30):
-        #     print_cards(cards.loc[i])
+    
         
 
 if __name__ == '__main__':
