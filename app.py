@@ -72,10 +72,29 @@ def main():
             as a format
         ''')
         #if st.button('Random'):
-    if choises == 'EDH':# missing edh explination
+    if choises == 'EDH':# remmber to pass writen text by text editor for spelling mistakes..
         st.title('EDH as a format')
         st.markdown('''
-        
+        the EDH format (also known as commander or Eldr Dragon Highlander), is an interesting format with simple rules.\n
+        - first. all decks must have a commander
+            - commanders must be legendary creatures.
+            - some exeptions may apply. Said exeptions mention the clauses of their use in the card effects.
+            - all commanders start the game in the command zone.
+            - they can be cast from there whenever you could cast a creature. 
+            - if the commander would change location (i.e. field to grave, grave to exile, field to deck, ect.) you may instead have it go to commander zone instead.
+            - every time the commander is cast from the command zone after the first, the commander cost a cumulative 2 colorless more.(i.e. 2 after first, then 4,6 ,8, so on and soforth)
+        - decks must be 100 cards. including the commander(s)
+        - cards within the deck must be within the commander's color identity.
+            - i.e. if the comander's color identity is Red Blue. all cards must have a color identity of
+                - Red, 
+                - Blue,
+                - Red + Blue
+                - colorless 
+        - cards that generate colored mana can still generate mana of any color. but cannot have a color identity outside the commander's 
+        - life totals start at 40.
+        - there is no cap in the total number of players. 
+        - if the number of partisipating players is greater than 2, all players draw 1 on their first turn.
+        - most other rules are as normall in MTG.
         ''')                   
     if choises == 'color selection':# need to add check for vaiable plainwalker commanders
         st.title('Commander colors')
