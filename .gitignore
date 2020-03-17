@@ -1,5 +1,6 @@
 *.sqlite
 mtg_modern_whole.csv
+img_uri.csv
 *.ipynb
 json
 *json

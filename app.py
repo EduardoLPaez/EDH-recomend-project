@@ -21,7 +21,9 @@ card_model1 = joblib.load('models/language_kmeans.sav')
 #     result = randint(2, 5)
 #     return result
 def cards(command, model = card_model1, df = data):
-    command_text = [data.query(f"name == '{command}'")]
+    command_text = list(data.query(f"name == '{command}'")['text'])[0]
+    # command_uri = list(data.query(f"name == '{command}'")['uri'])[0]
+    # st.image(command_uri)
     st.markdown(f'''
                 - {command}:  
                 - {command_text}
