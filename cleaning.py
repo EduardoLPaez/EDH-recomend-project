@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import re
 import sqlite3
+# from image_call imort image_pull
 
 connect = sqlite3.connect('AllPrintings.sqlite')
 
@@ -27,13 +28,15 @@ def remove_redundant(redundant):
             id_.append(redundant['scryfallId'][i])
     return redundant.query(f"scryfallId == {id_}")
 
-def image_uri():
+def image_uri():# in need of change and imrpovement.
     try:
         temp = pd.read_csv('Images/img_uri.csv')
         temp.columns = ['index', 'uri']
         temp.set_index('index', inplace =True)
         return temp['uri']
     except:
+        # image_pull
+        # return imge_uri()
         return
 
 def deep_clean(frame_):
