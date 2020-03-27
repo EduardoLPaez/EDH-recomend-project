@@ -28,16 +28,18 @@ def remove_redundant(redundant):
             id_.append(redundant['scryfallId'][i])
     return redundant.query(f"scryfallId == {id_}")
 
-def image_uri():# in need of change and imrpovement.
-    try:
-        temp = pd.read_csv('Images/img_uri.csv')
-        temp.columns = ['index', 'uri']
-        temp.set_index('index', inplace =True)
-        return temp['uri']
-    except:
-        # image_pull
-        # return imge_uri()
-        return
+def image_uri(dframe):# in need of change and imrpovement.
+    list_ = []
+    normal =[]
+    json_pull = pd.read_json('json/scryfall-default-cards.json')
+    for i in dframe['scryfallId']:
+        list_.append(json_pull.query(f'id == "{i}"')['image_uris'].values[0])
+    for i in list_:
+        if type(i) == float:
+            normal.append(False)
+        else:
+            normal.append(i['normal'])
+    return normal
 
 def deep_clean(frame_):
     frame_2 = frame_[['name', 'power', 'toughness', 'text',
@@ -53,7 +55,7 @@ def deep_clean(frame_):
         else: 
             is_commander.append(0)
     frame_4['is_commander'] = is_commander
-    frame_4['uri'] = image_uri()
+    frame_4['uri'] = image_uri(frame_4)
     return frame_4
 
 def color_split(color): # creates a get dummies for color cost and color identity, also drops new useless columns.
@@ -82,8 +84,8 @@ def color_split(color): # creates a get dummies for color cost and color identit
     color.drop(columns = ['manaCost','colors','colorIdentity'], inplace = True)
     return color
 
-# try:
-#     color = pd.read_csv('mtg_modern_clean.csv')
-# except:
-mtg_frame = clean()
-mtg_frame.to_csv('mtg_modern_clean.csv')
+try:
+    color = pd.read_csv('mtg_modern_clean.csv')
+except:
+    mtg_frame = clean()
+    mtg_frame.to_csv('mtg_modern_clean.csv')
