@@ -7,7 +7,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cluster import KMeans
 from sklearn.metrics import adjusted_rand_score
 import joblib
-
+import matplotlib.pyplot as pt
+import seaborn as sns
 
 data = pd.read_csv("mtg_modern_clean.csv")
 card_model1 = joblib.load('models/language_kmeans.sav')
@@ -26,7 +27,7 @@ planeswalkers = data.where(data['types'].str.endswith('Planeswalker')).drop(colu
 
 def ana_creature_types(c = creatures):
     set_ = []
-    multytype = [0] * 7 
+    # multytype = [0] * 7 
     for i in c['type'].values: # creates a  list of each unique tribe type.
         if type(i.split(' ')) == list:
             for y in i.split(' '):
@@ -39,14 +40,14 @@ def ana_creature_types(c = creatures):
         for y in c['type']:
             if el in y:
                 count[i] += 1
-                multytype
+                
     cType = pd.DataFrame() # following section cleans it up, by removing redundancies("creature",empty spaces, and "legendary" are not exactly tribes)
     cType['subtypes'] = creature_types
     cType['count'] = count
-    total = cType.loc[42].values[1]
     total_percentage = []
     legendary = cType.loc[121]
     cType = cType.drop([243,42,121])
+    total = cType['count'].values.sum()
     for i in cType['count']:
         total_percentage.append(100 * int(i)/int(total))
     cType['percentage'] = total_percentage
@@ -237,6 +238,10 @@ def main():
             st.markdown('''tribes within mtg are ussually a subtype of creature with overlaping effects and or effects focuesed on a particular
             tribe. There are some tribal spells that are not creatures, but modern tribal spells are all creatures
             ''')
+            data_creature_tribe = ana_creature_types()
+            top15 = data_creature_tribe.sort_values(by = 'count', ascending = False).head(15)
+            # st.text(top15)
+            st.bar_chart(top15[['count','subtypes']]) # gods I HATE this bs. need better documentation of stremlit, and or time improving this section.....
 
     
         
