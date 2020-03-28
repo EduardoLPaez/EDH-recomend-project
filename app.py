@@ -20,17 +20,18 @@ card_model1 = joblib.load('models/language_kmeans.sav')
 # def roll_(to ):
 #     result = randint(2, 5)
 #     return result
-def cards(command, model = card_model1, df = data):
+def cards(command, model = card_model1, df = data):# modify the size, also add recomendations, 
     command_text = list(data.query(f"name == '{command}'")['text'])[0]
-    # command_uri = list(data.query(f"name == '{command}'")['uri'])[0]
-    # st.image(command_uri)
+    command_uri = list(data.query(f"name == '{command}'")['uri'])[0]
+    st.image(command_uri)
     st.markdown(f'''
                 - {command}:  
                 - {command_text}
                 ''')
     #cluster = model.predict(df.query(f'name == "{command}"')['text'])
     return #data.query(f'clusters == {cluster}')
-
+def recomendations(commander_, set_ = data):
+    cluster = set_['']
 def print_card(comm, card = data ):
     st.subheader(card.query(f'name == "{comm}"')['name'])
     st.markdown(card.query(f'name == "{comm}"')['text']) # consider adding color identity in a redable format.
@@ -80,7 +81,7 @@ def main():
     if choises == 'explinations':
         st.title('color and format explibations')
         bar_choice = st.selectbox('section', ['color explination', 'EDH'])
-        if bar_choice == 'EDH':# remember to pass writen text by text editor for spelling mistakes..
+        if bar_choice == 'EDH':# remember to pass writen text by text editor for spelling mistakes.. 
             st.title('EDH as a format')
             st.markdown('''
             the EDH format (also known as commander or Eldr Dragon Highlander), is an interesting format with simple rules.\n
@@ -104,15 +105,15 @@ def main():
             - if the number of partisipating players is greater than 2, all players draw 1 on their first turn.
             - most other rules are as normall in MTG.
             ''')   
-        if bar_choice == 'color explination': # need to add exerp for blue and green
+        if bar_choice == 'color explination': # need to finish green
             st.title('color explination')
             st.subheader('Black')
             st.markdown('''
             Black is the color of power, death, and ambition. It uses any and all posible resources to gain the upperhand in a game.
-            \nmost cards in the color use the life total, hand, deck, or even other creatures on the field or off it as a resource to be
-            \nexpended for further advantage. when mixed with other colors, the result tends to be more specialized on using
-            \none resourece, genneraly black white focuses on using lifetotal, black blue abuses the hand and deck, black red focuses on creatures 
-            \nand sacrefice, and black green focuses on recurring the graveyard at nauseum. 
+            most cards in the color use the life total, hand, deck, or even other creatures on the field or off it as a resource to be
+            expended for further advantage.\n when mixed with other colors, the result tends to be more specialized on using
+            one resourece, genneraly black white focuses on using lifetotal, black blue abuses the hand and deck, black red focuses on creatures 
+            and sacrefice, and black green focuses on recurring the graveyard at nauseum. 
             \nblack's weackness lies in its inability to deal with non creature permanents such as artifacts and enchanments. its goal tends to be to
             \nout value its opponents before the nonliving parts of the decks overwelm it.
             ''')
@@ -121,9 +122,9 @@ def main():
             \nWhite is the color of healing, enchanment, and token armies. It specialises on fielding large numbers of smaller creatures and \naltering the rules of 
             engament to benefit them. It is filled with cards that heal the player, and keep creatires alive against all ods,\n or earradicate everithing for aclean 
             slate. when mixed into other colors white genneraly bolster some aspect of the color.\n white black focuses on modifiying the life total to your advantage,
-            white blue has some of the strongest and most encompasing enchanments,\n white green can field massive armies of tokens, and white red
+            white blue has some of the strongest and most encompasing enchanments, white green can field massive armies of tokens, and white red
             is ussually associated with equipment artifacts. 
-            \nwhite's weackness lies in its speed. Its deffencive nature has a tendency to slow it down \nthough its versatily and ability to whipe the board clean
+            \nwhite's weackness lies in its speed. Its deffencive nature has a tendency to slow it down though its versatily and ability to whipe the board clean
             if nessesary compensate for it. 
             ''')
             st.subheader('Red')
@@ -138,9 +139,29 @@ def main():
             """)
             st.subheader('Blue')
             st.markdown('''
-            ''')
+            Blue is the color of knolege, curiosity, and magic. it is the slowest color of the five, but makes up for it with a slew of
+            spells and creature effects to slow the pace of the game to its liking. it is the only color with reliable counter spells, to the 
+            chagrin of most other players on the table. it brings a great amount of controll to most colors it mixes with.
+            \n Blue Black is all about removing options for your enemies by attacking their deck and hand. Blue White 
+            dictates the pace of the game with slews of enchanments and swarms of flying creatures. Blue Red fight more like clasical 
+            wizards, lightning bolts, fireballs, and all maner of lar scale spells. Blue Green, may quite well be the slowest 
+            color combination of the duo colors, yet wields the largest amount of raw resources for
+            both grenns usual colosi and blues own variation on such.
+            \n over all Blue's weackness is its lack of direct offencive. While it exels at messing with their enemies flow
+            it lacks a viable offencive till later into a game. 
+                    ''')
             st.subheader('Green')
             st.markdown(''' 
+            Green is the color of nature, life, growth. While it usually fields few creatures, these few tend to be 
+            quite large. ussually this would make the color unbelibably slow, howerver coupeled with its nearly complete
+            monopoly in spells focused on adding more resources to the board, they tend to show up earlier than some would
+            think.
+            \n when combined wih other colors green ussually brings its ability to ramp up to the other colors. 
+            Green Black abuse Black's ability to revive and greens resources to create a trully resilient undying army.
+            Green White brings Green's fuel to White's token armies, trully blowing their scales out of proporsion.
+            Green Red mix the trully scarry size of Green, and Red's speed of deployment leading to what is likely 
+            the most agressive of the color combinations. 
+            Green Blue, use Blue's controll and Green's resources and size to qute litteraly   
             ''')                
     if choises == 'color selection':# need to add check for vaiable plainwalker commanders
         commander = st.selectbox('commanders', commanders)
@@ -165,7 +186,7 @@ def main():
         if commander != 'chose':
             st.title(f'{commander}')
             cards(commander)
-
+            # recomendations(commander)
             # cards = color_correct(cards, commander).reset_index()
 
             # for i in range(30):
