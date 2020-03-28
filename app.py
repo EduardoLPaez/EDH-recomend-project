@@ -12,14 +12,46 @@ import joblib
 data = pd.read_csv("mtg_modern_clean.csv")
 card_model1 = joblib.load('models/language_kmeans.sav')
 
-# pd.set_option('display.colwidth' , 500 )
-# test_img = 'https://img.scryfall.com/cards/normal/front/0/3/03f4341c-088b-4f35-b82b-3d98d8a93de4.jpg?1576382166'
-# _list = [0,0,0,0,0]
+# bellow are dataframes with a bit more focus ussed for each of the ana_ functions. 
+creatures = data.where(data['types'].str.endswith('Creature')).dropna(how='all') # add artifact/enchanntment creatures.
+spells = data.where(data['types'].str.endswith(('Sorcery', 'Instant'))).drop(columns = [ 'power', 'toughness']).dropna(how='all') # add trybal spells.
+artifacts = data.where(data['types'].str.endswith('Artifact')).drop(columns = ['power', 'toughness']).dropna(how='all') # filter out artefact lands
+enchantments = data.where(data['types'].str.endswith('Enchantment' )).drop(columns = [ 'power', 'toughness']).dropna(how='all')
+planeswalkers = data.where(data['types'].str.endswith('Planeswalker')).drop(columns = [ 'power', 'toughness']).dropna(how='all')
 
 
-# def roll_(to ):
+# def roll_(to ): # randomiser, might add it back later(probably wont...)
 #     result = randint(2, 5)
 #     return result
+
+def ana_creature_types(c = creatures):
+    set_ = []
+    multytype = [0] * 7 
+    for i in c['type'].values: # creates a  list of each unique tribe type.
+        if type(i.split(' ')) == list:
+            for y in i.split(' '):
+                set_.append(y)
+        else:
+            set_.append(i)
+    creature_types = sorted(set(set_))
+    count = [0] * len(creature_types)
+    for i,el in enumerate(creature_types): # uses a bove list to create a count of each apperance of each unique tribe.
+        for y in c['type']:
+            if el in y:
+                count[i] += 1
+                multytype
+    cType = pd.DataFrame() # following section cleans it up, by removing redundancies("creature",empty spaces, and "legendary" are not exactly tribes)
+    cType['subtypes'] = creature_types
+    cType['count'] = count
+    total = cType.loc[42].values[1]
+    total_percentage = []
+    legendary = cType.loc[121]
+    cType = cType.drop([243,42,121])
+    for i in cType['count']:
+        total_percentage.append(100 * int(i)/int(total))
+    cType['percentage'] = total_percentage
+    cType.reset_index(inplace = True, drop = True)
+    return cType
 def cards(command, model = card_model1, df = data):# modify the size, also add recomendations, 
     command_text = list(data.query(f"name == '{command}'")['text'])[0]
     command_uri = list(data.query(f"name == '{command}'")['uri'])[0]
@@ -31,7 +63,8 @@ def cards(command, model = card_model1, df = data):# modify the size, also add r
     #cluster = model.predict(df.query(f'name == "{command}"')['text'])
     return #data.query(f'clusters == {cluster}')
 def recomendations(commander_, set_ = data):
-    cluster = set_['']
+    # cluster = set_['']
+    return 0
 def print_card(comm, card = data ):
     st.subheader(card.query(f'name == "{comm}"')['name'])
     st.markdown(card.query(f'name == "{comm}"')['text']) # consider adding color identity in a redable format.
@@ -62,7 +95,7 @@ def top_commanders(in_, frame = data): # filters commander collor identities
 def main():
     # lists used by select boxes in app.
     menu = ['start','explinations','color selection', 'card analysis']
-    analisys_menu = ['start', 'types distribution']
+    analisys_menu = ['start', 'types distribution', 'creature tribes']
     commanders = list(np.append(np.array(['chose']), data.query('is_commander == 1')['name'].sort_values()))
 
     # sidebar. need to learn how to make sidebar NOT a select box...
@@ -196,9 +229,15 @@ def main():
         analysis_choice = st.selectbox('section', analisys_menu)
         if analysis_choice == 'start':
             st.subheader('Hello')
-            st.markdown('this section is for the analisys\n and exploration of the mtg data\n select a section from the bar above.\n and have fun. :D\n')
+            st.markdown('this section is for the analisys and exploration of the mtg data select a section from the bar above.\n and have fun. :D')
         if analysis_choice == 'types distribution':
             st.subheader('working on it')
+        if analysis_choice == 'creature tribes':
+            st.subheader('Tribes')
+            st.markdown('''tribes within mtg are ussually a subtype of creature with overlaping effects and or effects focuesed on a particular
+            tribe. There are some tribal spells that are not creatures, but modern tribal spells are all creatures
+            ''')
+
     
         
 
