@@ -84,8 +84,8 @@ def color_split(color): # creates a get dummies for color cost and color identit
     color.drop(columns = ['manaCost','colors','colorIdentity'], inplace = True)
     return color
 
-try:
-    color = pd.read_csv('mtg_modern_clean.csv')
-except:
-    mtg_frame = clean()
-    mtg_frame.to_csv('mtg_modern_clean.csv')
+# try:
+#     color = pd.read_csv('mtg_modern_clean.csv')
+# except:
+mtg_frame = clean()
+mtg_frame.to_csv('mtg_modern_clean.csv')

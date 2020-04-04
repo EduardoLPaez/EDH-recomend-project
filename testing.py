@@ -11,6 +11,7 @@ import urllib
 from selenium import webdriver
 from time import sleep
 import threading
+from random import randint
 
 
 url_patern = 'http://tappedout.net/mtg-decks/'
@@ -44,13 +45,13 @@ def strip_ (text_):# used in the above .
 def parser_deck_names(in_,di, pg_num = 1): # content parser.
     
     if pg_num == 1:
-        url_comm = f'https://tappedout.net/mtg-decks/search/?q=&format=edh&general={in_}&is_top=on&price_0=&price_1=&o=-date_updated&submit=Filter+results' 
+        url_comm = f'https://tappedout.net/mtg-decks/search/?q=&format=edh&general={in_}&price_0=&price_1=&o=-rating&submit=Filter+results'
     elif pg_num >= 2:
         url_comm = f'https://tappedout.net/mtg-decks/search/?q=&format=edh&general={in_}&is_top=on&price_0=&price_1=&o=-date_updated&submit=Filter+results&p={pg_num}&page={pg_num}'
     
     di.get(url_comm)
     request = di.execute_script("window.scrollTo(0,document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
-    sleep(4)# currently set to 4 secs(rough estimate 3600 secs.(~3h)) will need paraleles...
+    sleep(randint(5,8))# currently set to 4 secs(rough estimate 3600 secs.(~3h)) will need paraleles...
 
     returns = bs(di.page_source, 'html.parser')
     if pg_num == 1:
@@ -88,12 +89,12 @@ class spider_Thread(threading.Thread):
 #     list1.append(temp)
     # print(pgn)
 deck_names = get_names()
-thread1 = spider_Thread(deck_names[:173])
-thread2 = spider_Thread(deck_names[173:345])
-thread3 = spider_Thread(deck_names[345:519])
-thread4 = spider_Thread(deck_names[529:693])
-thread5 = spider_Thread(deck_names[693:867])
+thread1 = spider_Thread(deck_names[:200])
+thread2 = spider_Thread(deck_names[200:400])
+thread3 = spider_Thread(deck_names[400:600])
+thread4 = spider_Thread(deck_names[600:800])
+thread5 = spider_Thread(deck_names[800:-1])
 
-deck_names_complete = str.join(thread1.run(),thread2.run(),thread3.run(),thread4.run(),thread5.run())
+deck_names_complete = thread1.run()+ thread2.run() + thread3.run() + thread4.run() + thread5.run()
 df = pd.DataFrame(deck_names_complete)
 df.to_csv('commander_deck_names.csv')
