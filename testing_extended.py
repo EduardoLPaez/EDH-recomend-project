@@ -29,27 +29,36 @@ def parser_decks(deck_name, drive, url = url_patern):
     temp1 = []
     temp = returns.findAll('ul')
     for i in temp:
-        card_list = i.findAll('a', href = re.compile('/mtg-card/'))
-
-        temp1.append()
+        temp1.append(i.findAll('a', href = re.compile('/mtg-card/')))
 
 
     # results =  com_result + deck_result
     fresults = []
+    comm = []
     for i in temp1:
-        fresults.extend(clean(i))
-    return  fresults
+        set_ = clean(i)
+        if set_ == None:
+            comm.extend(clean(i, comm_trig = True))
+        else:
+            fresults.extend(clean(i))
+        
+
+    res_dict = {str(comm) : [fresults]}
+    return  res_dict
 
 # add following three to tool_belt.py hella usefull in future ventures....
-def clean(t_list):# cleaning up the name html.
+def clean(t_list,comm_trig = False):# cleaning up the name html.
     list_=[]
     command =[]
     for i in t_list:
-        try: 
-            list_.append(i.get('data-name'))#.find('a', attr = 'data-name'))
+        try:
+            if comm_trig == False: 
+                list_.append(i.get('data-name'))#.find('a', attr = 'data-name'))
+            else:
+                list_.append(i.get('href'))
         except: # need to come p with conditional to define the commander..
             #command.append(i.get('href'))
-            print(i.find('href'))
+            print(None)
     return list_ 
     
 def strip_ (text_):# used in the above .
