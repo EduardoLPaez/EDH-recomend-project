@@ -73,7 +73,7 @@ class spider_Thread(threading.Thread):
         threading.Thread.__init__(self) 
         self.com_names = com_names
         self.driver = webdriver.Firefox(executable_path=r'/home/ed/Documents/gecko/geckodriver-v0.26.0-linux64/geckodriver')
-        self.list_ = []
+        self.list_ = {}
 
     def run(self):
         # driver = webdriver.Firefox(executable_path=r'/home/ed/Documents/gecko/geckodriver-v0.26.0-linux64/geckodriver')
