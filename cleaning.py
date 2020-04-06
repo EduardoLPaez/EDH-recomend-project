@@ -49,8 +49,8 @@ def deep_clean(frame_):
     frame_3 = remove_redundant(frame_2)
     frame_4 = color_split(frame_3)
     is_commander = []
-    for i in frame_4['type']:
-        if i.startswith('Legendary Creature'):
+    for type1  in frame_4['type']:
+        if type1.startswith('Legendary ') and 'Creature' in type1:
             is_commander.append(1)
         else: 
             is_commander.append(0)
