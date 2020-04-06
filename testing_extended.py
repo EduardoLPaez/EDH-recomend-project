@@ -26,27 +26,31 @@ def parser_decks(deck_name, drive, url = url_patern):
     sleep(randint(6,8))# currently set to 4 secs(rough estimate 3600 secs.(~3h)) will need paraleles...
     returns = bs(drive.page_source, 'html.parser')
 
-    com_result = returns.findAll('a', href = re.compile('/mtg-card/')) # tags for the commander. need to remmeber there may be none. check after run to clean result.
-
     temp1 = []
     temp = returns.findAll('ul')
     for i in temp:
-        temp1.append(i.findAll('a', href = re.compile('/mtg-card/')))
+        card_list = i.findAll('a', href = re.compile('/mtg-card/'))
+
+        temp1.append()
 
 
     # results =  com_result + deck_result
     fresults = []
     for i in temp1:
-        fresults.append(clean(i))
+        fresults.extend(clean(i))
     return  fresults
 
 # add following three to tool_belt.py hella usefull in future ventures....
 def clean(t_list):# cleaning up the name html.
     list_=[]
+    command =[]
     for i in t_list:
-        list_.append(i.find('data-name'))
-        
-    return list_
+        try: 
+            list_.append(i.get('data-name'))#.find('a', attr = 'data-name'))
+        except: # need to come p with conditional to define the commander..
+            #command.append(i.get('href'))
+            print(i.find('href'))
+    return list_ 
     
 def strip_ (text_):# used in the above .
     step1 = re.sub('<a href=/mtg-card/"','',text_)
