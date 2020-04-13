@@ -48,18 +48,18 @@ def parser_decks(deck_name, drive, url = url_patern):
 
 # add following three to tool_belt.py hella usefull in future ventures....
 def clean(t_list,comm_trig = False):# cleaning up the name html.
-    list_=[]
+    list_= pd.DataFrame()
     command =[]
     for i in t_list:
         try:
             if comm_trig == False: 
                 list_.append(i.get('data-name'))#.find('a', attr = 'data-name'))
             else:
-                list_.append(i.get('href'))
+                command.append(i.get(re.find('a',  'href="/mtg-card/')))
         except: # need to come p with conditional to define the commander..
             #command.append(i.get('href'))
             print(None)
-    return list_ 
+    return list_.insert(0, command) # remember partner commanders, need to add cleanfor that. 
     
 def strip_ (text_):# used in the above .
     step1 = re.sub('<a href=/mtg-card/"','',text_)
