@@ -23,26 +23,29 @@ def parser_decks(deck_name, drive, url = url_patern):
 
     drive.get(url_comm)
     request = drive.execute_script("window.scrollTo(0,document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
-    sleep(randint(6,8))# currently set to 4 secs(rough estimate 3600 secs.(~3h)) will need paraleles...
+    sleep(randint(6,8))# running 5 strings in tandem time requirements should be round 10hours.will likely run 10+ trings.
     returns = bs(drive.page_source, 'html.parser')
 
+    # this section gets the subcontainers within tapped outs deck container sction.
     temp1 = []
     temp = returns.findAll('ul')
-    for i in temp:
+    for i in temp:# crrent issue is here<<<<< my have failled to get the right tags.
         temp1.append(i.findAll('a', href = re.compile('/mtg-card/')))
 
 
     # results =  com_result + deck_result
+    # following section grabs the list of lists genereated by the above and cleans it up into a single list
+    # working on also sifting out the commander name... 
     fresults = []
     comm = []
     for i in temp1:
         set_ = clean(i)
-        if set_ == None:
-            comm.extend(clean(i, comm_trig = True))
-        else:
-            fresults.extend(clean(i))
+        # if set_ == None:
+        #     comm.extend(clean(i, comm_trig = True))
+        # else:
+        fresults.extend(clean(i))
         
-
+    # then it all gets bundeled up in dictionaries.... considering turning it to lists for ease of use..(I hate dictionaries....)
     res_dict = {str(comm) : [fresults]}
     return  res_dict
 
@@ -52,14 +55,15 @@ def clean(t_list,comm_trig = False):# cleaning up the name html.
     command =[]
     for i in t_list:
         try:
-            if comm_trig == False: 
-                list_.append(i.get('data-name'))#.find('a', attr = 'data-name'))
-            else:
+            list_.append(i.get('data-name'))
+            if i.get('data-name') == None: 
+                #.find('a', attr = 'data-name'))
                 command.append(i.get(re.find('a',  'href="/mtg-card/')))
+
         except: # need to come p with conditional to define the commander..
             #command.append(i.get('href'))
-            print(None)
-    return list_.insert(0, command) # remember partner commanders, need to add cleanfor that. 
+            print('if there are more than 3-4 of these ther is a problem here!!!')
+    return command + list_ # remember partner commanders, need to add cleanfor that. 
     
 def strip_ (text_):# used in the above .
     step1 = re.sub('<a href=/mtg-card/"','',text_)
