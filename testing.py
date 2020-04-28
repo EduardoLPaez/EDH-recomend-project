@@ -72,13 +72,13 @@ class spider_Thread(threading.Thread):
         self.com_names = com_names
         self.driver = webdriver.Firefox(executable_path=r'/home/ed/Documents/gecko/geckodriver-v0.26.0-linux64/geckodriver')
         # need to modify bellow and run()'s return to modify into a df.
-        self.list_ = pd.DataFrame()
+        self.list_ = pd.DataFrame(index = range(20))
 
     def run(self):
         # driver = webdriver.Firefox(executable_path=r'/home/ed/Documents/gecko/geckodriver-v0.26.0-linux64/geckodriver')
         for i in self.com_names:
             temp, pgn = parser_deck_names(i, self.driver)
-            self.list_[f'i'] = temp
+            self.list_[i] = pd.Series(temp)
         list1 = self.list_ 
         self.driver.quit()
         return list1
