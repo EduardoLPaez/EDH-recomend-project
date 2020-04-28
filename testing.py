@@ -71,6 +71,7 @@ class spider_Thread(threading.Thread):
         threading.Thread.__init__(self) 
         self.com_names = com_names
         self.driver = webdriver.Firefox(executable_path=r'/home/ed/Documents/gecko/geckodriver-v0.26.0-linux64/geckodriver')
+        # need to modify bellow and run()'s return to modify into a df.
         self.list_ = []
 
     def run(self):
@@ -97,7 +98,7 @@ thread4 = spider_Thread(deck_names[450:600])
 thread5 = spider_Thread(deck_names[600:750])
 thread6 = spider_Thread(deck_names[750:-1])
 
-
+# need to look up pandas.append or simmilar for bellow VVV 
 deck_names_complete = thread1.run()+ thread2.run() + thread3.run() + thread4.run() + thread5.run() + thread6.run()
 df = pd.DataFrame(deck_names_complete)
 df.to_csv('commander_deck_names.csv')
