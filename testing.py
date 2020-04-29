@@ -99,6 +99,6 @@ thread5 = spider_Thread(deck_names[600:750])
 thread6 = spider_Thread(deck_names[750:-1])
 
 # need to look up pandas.append or simmilar for bellow VVV 
-deck_names_complete = pd.concat([thread1.run(),thread2.run(), thread3.run(), thread4.run(),thread5.run(), thread6.run()])
+deck_names_complete = pd.concat([thread1.run(),thread2.run(), thread3.run(), thread4.run(),thread5.run(), thread6.run()], left_index = True)
 df = pd.DataFrame(deck_names_complete)
 df.to_csv('commander_deck_names.csv')
