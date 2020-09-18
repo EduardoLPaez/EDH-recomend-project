@@ -8,6 +8,7 @@ import pandas as pd
 from bs4 import BeautifulSoup as bs
 from textblob import TextBlob as tb
 import urllib
+# need to find a better way to query edh data. 3hours to pull is NOT ok for the quality of data.
 from selenium import webdriver
 from time import sleep
 import threading

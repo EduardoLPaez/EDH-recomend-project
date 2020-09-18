@@ -3,9 +3,11 @@ import pandas as pd
 import numpy as np
 from random import choice
 from textblob import TextBlob
+# modify bellow need to implement a mre usefull and comprehensive algorithm(plan is tenserflow. language is a B)
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cluster import KMeans
 from sklearn.metrics import adjusted_rand_score
+
 import joblib
 import matplotlib.pyplot as pt
 import seaborn as sns
