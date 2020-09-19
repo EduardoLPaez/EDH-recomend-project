@@ -4,14 +4,19 @@
 import pandas as pd
 import numpy as np
 import os.path, time
-from datetime import datetime 
+from datetime import datetime
 
-now = datetime.now() # redundancies are grand arent they....
 
 # last time modified is0: os.path.ctime(), time interval is gonna be slated to be 3-4 months(likely 4)
 # this is to permit blcok rotation. return is in unix time.
-"last modified: %s" % time.ctime(os.path.getmtime('AllPrintings.sqlite'))# works, 
-print(now.strftime("%D"))#gets curent date.
+
+last_mod = datetime.utcfromtimestamp(os.path.getmtime('AllPrintings.sqlite'))# works, 
+current = datetime.utcnow()#gets curent date.
+
+if (current - last_mod).days >= 90:
+    print("\n It works!!")
+else:
+    print ('\nfailuer...') 
 
 # bellow is creation time, -----to add to tollbelt later----- 
 # print("created: %s" % time.ctime(os.path.getctime('AllPrintings.sqlite')))
